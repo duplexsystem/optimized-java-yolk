@@ -1,4 +1,4 @@
-ARG JDK_VERSION="21"
+ARG JDK_VERSION="24"
 
 FROM ubuntu:latest as builder
 
