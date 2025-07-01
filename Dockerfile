@@ -39,7 +39,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 ENV  LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl wget ca-certificates fontconfig locales binutils lsof curl openssl git tar sqlite3 libfreetype6 iproute2 libstdc++6 libmimalloc2.0 git-lfs tini zip unzip; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl wget ca-certificates fontconfig locales binutils lsof curl openssl git tar sqlite3 libfreetype6 iproute2 libstdc++6 libmimalloc2.0 git-lfs tini zip unzip jq; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8; \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y; \
