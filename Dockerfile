@@ -1,6 +1,7 @@
-ARG JDK_VERSION="24"
+ARG JDK_VERSION="25"
+ARG UBUNTU_VERSION="25.10"
 
-FROM ubuntu:latest as builder
+FROM ubuntu:${UBUNTU_VERSION} as builder
 
 RUN apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends locales binutils; \
@@ -24,7 +25,7 @@ RUN cd /tmp/zlib-ng-zlib-ng-*; \
     ./configure --zlib-compat; \
     make -j$(nproc); make install
 
-FROM ubuntu:latest
+FROM ubuntu:${UBUNTU_VERSION}
 ARG JDK_VERSION
 
 LABEL author="Zoë Gidiere" maintainer="duplexsys@protonmail.com"
@@ -39,7 +40,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 ENV  LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl wget ca-certificates fontconfig locales binutils lsof curl openssl git tar sqlite3 libfreetype6 iproute2 libstdc++6 libmimalloc2.0 git-lfs tini zip unzip jq; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl wget ca-certificates fontconfig locales binutils lsof curl openssl git tar sqlite3 libfreetype6 iproute2 libstdc++6 libmimalloc2.0 git-lfs tini zip unzip jq redis-tools; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8; \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y; \
@@ -82,7 +83,7 @@ RUN echo Verifying install ...; \
 ## Setup user and working directory
 RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
-ENV         USER=container HOME=/home/container LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.2 MIMALLOC_LARGE_OS_PAGES=1
+ENV         USER=container HOME=/home/container LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.2 MIMALLOC_ALLOW_LARGE_OS_PAGES=1 MIMALLOC_PURGE_DELAY=100
 WORKDIR     /home/container
 
 STOPSIGNAL SIGINT
