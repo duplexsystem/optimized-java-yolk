@@ -1,7 +1,7 @@
 ARG JDK_VERSION="25"
 ARG UBUNTU_VERSION="25.10"
 
-FROM ubuntu:${UBUNTU_VERSION} as builder
+FROM ubuntu:${UBUNTU_VERSION} AS builder
 
 RUN apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends locales binutils; \
@@ -40,7 +40,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 ENV  LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl wget ca-certificates fontconfig locales binutils lsof curl openssl git tar sqlite3 libfreetype6 iproute2 libstdc++6 libmimalloc2.0 git-lfs tini zip unzip jq redis-tools; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl wget ca-certificates fontconfig locales binutils lsof curl openssl git tar sqlite3 libfreetype6 iproute2 libstdc++6 libmimalloc3 git-lfs tini zip unzip jq valkey-tools; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.UTF-8; \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y; \
@@ -72,6 +72,13 @@ RUN set -eux; \
 # https://openjdk.java.net/jeps/341
     java -Xshare:dump;
 
+## Setup user and working directory
+RUN         useradd -m -d /home/container -s /bin/bash container
+USER        container
+ENV         USER=container HOME=/home/container LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.3.0 MIMALLOC_ALLOW_LARGE_OS_PAGES=1 MIMALLOC_PURGE_DELAY=100
+WORKDIR     /home/container
+
+
 RUN echo Verifying install ...; \
     fileEncoding="$(echo 'System.out.println(System.getProperty("file.encoding"))' | jshell -s -)"; [ "$fileEncoding" = 'UTF-8' ]; rm -rf ~/.java; \
     echo javac --version; \ 
@@ -79,12 +86,6 @@ RUN echo Verifying install ...; \
     echo java --version; \
     java --version; \
     echo Complete.
-
-## Setup user and working directory
-RUN         useradd -m -d /home/container -s /bin/bash container
-USER        container
-ENV         USER=container HOME=/home/container LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.2 MIMALLOC_ALLOW_LARGE_OS_PAGES=1 MIMALLOC_PURGE_DELAY=100
-WORKDIR     /home/container
 
 STOPSIGNAL SIGINT
 
