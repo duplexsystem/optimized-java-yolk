@@ -82,9 +82,9 @@ qat = qat_section\n\
 \n\
 [ qat_section ]\n\
 engine_id = qatengine\n\
-dynamic_path = /usr/lib/x86_64-linux-gnu/engines-3/qatengine.so\n\
+ENABLE_SW_FALLBACK = 1\n\
+ENABLE_EVENT_DRIVEN_POLLING_MODE = 1\n\
 default_algorithms = ALL' > /etc/ssl/openssl_qat.cnf
-
 ## Setup user and working directory
 RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
@@ -99,8 +99,8 @@ RUN echo Verifying install ...; \
     java --version; \
     echo openssl version; \
     openssl version; \
-    echo checking openssl engine; \
-    openssl engine -t -c -v qat; \
+    echo openssl engine -t -c -v qatengine; \
+    openssl engine -t -c -v qatengine; \
     echo Complete.
 
 STOPSIGNAL SIGINT
