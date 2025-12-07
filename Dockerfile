@@ -88,7 +88,7 @@ default_algorithms = ALL' > /etc/ssl/openssl_qat.cnf
 ## Setup user and working directory
 RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
-ENV         USER=container HOME=/home/container LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.3.0 MIMALLOC_ALLOW_LARGE_OS_PAGES=1 MIMALLOC_PURGE_DELAY=100 OPENSSL_CONF=/etc/ssl/openssl_qat.cnf
+ENV         USER=container HOME=/home/container LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.3.0 MIMALLOC_ALLOW_LARGE_OS_PAGES=1 MIMALLOC_PURGE_DELAY=100 QAT_POLICY=1 OPENSSL_CONF=/etc/ssl/openssl_qat.cnf
 WORKDIR     /home/container
 
 RUN echo Verifying install ...; \
