@@ -82,6 +82,7 @@ qat = qat_section\n\
 \n\
 [ qat_section ]\n\
 engine_id = qatengine\n\
+dynamic_path = /usr/lib/x86_64-linux-gnu/engines-3/qatengine.so\n\
 default_algorithms = ALL' > /etc/ssl/openssl_qat.cnf
 
 ## Setup user and working directory
