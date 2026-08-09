@@ -51,4 +51,3 @@ if [[ "$PARSED" == *[';&|']* ]]; then
 else
     eval "exec $PARSED"
 fi
-

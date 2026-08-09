@@ -18,8 +18,8 @@ RUN LOCATION=$(curl -s https://api.github.com/repos/zlib-ng/zlib-ng/releases/lat
     ; curl -L -o /tmp/zlib-ng.tar $LOCATION; \
     mkdir -p /tmp/; \
     tar --extract \
-	      --file /tmp/zlib-ng.tar \
-	      --directory "/tmp/"
+        --file /tmp/zlib-ng.tar \
+        --directory "/tmp/"
 
 RUN cd /tmp/zlib-ng-zlib-ng-*; \
     CFLAGS="-O3 -flto=auto" LDFLAGS="-flto=auto" ./configure --zlib-compat; \
@@ -37,7 +37,7 @@ ENV JAVA_HOME=/opt/java/graalvm
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Default to UTF-8 file.encoding
-ENV  LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 RUN set -eux; \
     DEBIAN_FRONTEND=noninteractive apt-get update; \
